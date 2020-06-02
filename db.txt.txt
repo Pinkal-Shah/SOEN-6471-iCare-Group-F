@@ -1,0 +1,27 @@
+CREATE TABLE patients(
+   Pid int NOT NULL AUTO_INCREMENT,
+   NAME VARCHAR (20)     NOT NULL,
+   password VARCHAR(20)  NOT NULL,
+   email VARCHAR(50),
+   gender VARCHAR(50),
+   PRIMARY KEY (Pid)    
+);
+
+CREATE TABLE doctors(
+   did int NOT NULL AUTO_INCREMENT,
+   NAME VARCHAR (20), 
+   PRIMARY KEY (did)    
+);
+
+
+CREATE TABLE booking(
+   bid int NOT NULL AUTO_INCREMENT,
+   time VARCHAR (20)     NOT NULL,  
+   PRIMARY KEY (bid),
+   Pid integer,
+   did integer,
+   FOREIGN KEY (Pid) REFERENCES Patients(Pid),
+   FOREIGN KEY (did) REFERENCES doctors (did)  
+);
+
+
