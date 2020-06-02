@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,15 +20,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Doctor")
 public class Doctor extends HttpServlet {
-	
-	  private Connection connect = null;
-	  private Statement statement = null;
-	  private PreparedStatement preparedStatement = null;
-	  private ResultSet resultSet = null;
-
-	  final private String host = "localhost:3306";
-	  final private String user = "root";
-	  final private String passwd = "admin";
 	  
 	private static final long serialVersionUID = 1L;
      
@@ -44,56 +36,23 @@ public class Doctor extends HttpServlet {
           throws ServletException, IOException {
       response.setContentType("text/html;charset=UTF-8");
       String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		try {
-		Class.forName("com.mysql.jdbc.Driver");
-	      
-	      // Setup the connection with the DB
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/doctor?"
-	              + "user=" + user + "&password=" + passwd );
-
-	      // Statements allow to issue SQL queries to the database
-	      statement = connect.createStatement();
-	      // Result set get the result of the SQL query
-	      resultSet = statement
-	          .executeQuery("select * from doctor.doctor_login");
-	      
-	      while (resultSet.next()) {
-	    	  if(resultSet.getString("username")==username) {
-	    		  if(resultSet.getString("password")==password) {
-	    			  response.sendRedirect("home.jsp");
-	    		  }
-	    	  }
-	      }
-	      
-	      
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	    } finally {
-	      close();
-	    }
-	
+      String password = request.getParameter("password");
+      
+      DoctorDAO doc = new DoctorDAO();
+      if(doc.checkLogin(username, password)) {
+    	  String destPage = "home.jsp";
+    	  RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
+    	  dispatcher.forward(request,response);
+      }
+      else {
+    	  String destPage = "index.html";
+    	  RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
+    	  dispatcher.forward(request,response);
+//    	  showLoginForm(request, response);
+      }
   }
   
-  private void close() {
-      try {
-        if (resultSet != null) {
-          resultSet.close();
-        }
-
-        if (statement != null) {
-          statement.close();
-        }
-
-        if (connect != null) {
-          connect.close();
-        }
-      } catch (Exception e) {
-
-      }
-    }
-
+  
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
