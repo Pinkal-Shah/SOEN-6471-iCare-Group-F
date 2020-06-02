@@ -1,3 +1,9 @@
+#First create a Mysql DB user with uname= root & password= root
+#copy paste the below DB queries (might chnage, just an init commit)
+
+CREATE DATABASE iCare;
+USE iCare;
+
 CREATE TABLE patients(
    Pid int NOT NULL AUTO_INCREMENT,
    NAME VARCHAR (20)     NOT NULL,
