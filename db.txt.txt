@@ -26,8 +26,15 @@ CREATE TABLE booking(
    PRIMARY KEY (bid),
    Pid integer,
    did integer,
-   FOREIGN KEY (Pid) REFERENCES Patients(Pid),
+   FOREIGN KEY (Pid) REFERENCES patients(Pid),
    FOREIGN KEY (did) REFERENCES doctors (did)  
 );
 
 
+INSERT INTO doctors(NAME)
+VALUES	('Alice Doe'),
+		('Bob Doe'),
+		('Dean Doe');
+
+CREATE USER 'iCareRoot'@'localhost' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON iCare.* TO 'iCareRoot'@'localhost';
