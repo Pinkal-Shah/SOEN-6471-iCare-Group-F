@@ -1,24 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%@page import="java.sql.ResultSet" %>
+<%@page import="iCare.UtilDB"%>
 
-<%@page import="java.sql.DriverManager"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.Connection"%>
 <%
-String sId = request.getParameter("userid");
-String sDriver = "com.mysql.jdbc.Driver";
-String sConnectionUrl = "jdbc:mysql://localhost:3306/iCare?autoReconnect=true&useSSL=false";
-try {
-		Class.forName(sDriver);
-	} 
-	catch (ClassNotFoundException e) {
-		e.printStackTrace();
-	}
-Connection oConnection = null;
-Statement oStatement = null;
-ResultSet oResultSet = null;
+	UtilDB oDatabase = new UtilDB();
 %>
 
 <!doctype html>
@@ -182,17 +169,12 @@ ResultSet oResultSet = null;
 						</table>
 					</div>
 					<div id="menu2" class="tab-pane fade">
-					<%
-					try{
-						oConnection = DriverManager.getConnection(sConnectionUrl, "iCareRoot", "root");
-						oStatement = oConnection.createStatement();
-					%>
 						<u><h3>Make new Appointments</h3></u>
 						<br>
 
 						<!--   <div class="form-group">
-							<label for="sel1">Select Department</label> <select
-								class="form-control" id="sel1">
+							<label for="department">Select Department</label> <select
+								class="form-control" id="department">
 								<option>1</option>
 								<option>2</option>
 								<option>3</option>
@@ -200,19 +182,18 @@ ResultSet oResultSet = null;
 							</select>
 						</div> -->
 						<div class="form-group">
-							<label for="sel1">Select Doctor</label> <select
-								class="form-control" id="sel1">
+							<label for="doctor">Select Doctor</label> <select
+								class="form-control" id="doctor">
 						<%
-						String sql = "SELECT * from doctors";
-						oResultSet = oStatement.executeQuery(sql);
+						ResultSet oResultSet = oDatabase.GetQuerry("SELECT * from doctor_login");
 						while(oResultSet.next()){
 						%>
-						<option> <%=oResultSet.getString("NAME") %></option>
+						<option> <%=oResultSet.getString("name") %></option>
 						<%} %>
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="sel1">Select Time Slot</label> <input
+							<label for="timeslot">Select Time Slot</label> <input
 								class="form-control" type="time" id="appt" name="appt"
 								min="09:00" max="18:00" required>
 						</div>
@@ -229,11 +210,9 @@ ResultSet oResultSet = null;
 
 		</div>
 		<%
-			oConnection.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+			// Use the following line to schedule, it returns false if it cannot schedule
+			//oDatabase.InsertBooking("1", "dean", "2020-08-02 11:30:00")
+			oDatabase.CloseConnection();
 		%>
 		<!-- /container -->
 
