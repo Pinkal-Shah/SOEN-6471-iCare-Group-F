@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!doctype html>
 <html lang="en">
@@ -28,7 +29,23 @@
 
 <!-- Custom styles for this template -->
 <link href="navbar.css" rel="stylesheet">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script type="text/javascript">
+$(document).on("click", "#somebutton", function() { 
+                $.get("someservlet", function(responseText) {   
+                    $("#somediv").text(responseText);    
+                });
+            });
+</script> -->
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.post("getBookingServlet", function(responseText) {
+			$("#somediv").text(responseText);
+		});
+	});
+</script>
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
@@ -102,37 +119,48 @@
 				</ul>
 				<hr>
 
-				<div class="tab-content" >
-					<div id="home" class="tab-pane fade in active" style="overflow:scroll">
+				<div class="tab-content">
+					<div id="home" class="tab-pane fade in active"
+						style="overflow: scroll">
 						<h3>Future Appointments</h3>
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th>Firstname</th>
-									<th>Lastname</th>
-									<th>Email</th>
+									<th>ID</th>
+									<th>Date Time Details</th>
+									<th>Name of the Doctor</th>
+									<th>Department</th>
+
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>John</td>
-									<td>Doe</td>
-									<td>john@example.com</td>
-								</tr>
-								<tr>
-									<td>Mary</td>
-									<td>Moe</td>
-									<td>mary@example.com</td>
-								</tr>
-								<tr>
-									<td>July</td>
-									<td>Dooley</td>
-									<td>july@example.com</td>
-								</tr>
+							<tr>
+										<td>aa</td>
+										<td>b</td>
+										<td>c</td>
+										<td>d</td>
+									</tr>
+								<c:forEach items="${sessionScope.listOfPastBookings}" var="e">
+									<tr>
+										<td>aa</td>
+										<td>b</td>
+										<td>c</td>
+										<td>d</td>
+									</tr>
+								</c:forEach>
+								
+								<%-- <tr>
+										<td>${e.getId()}</td>
+										<td>${e.getId()}</td>
+										<td>${e.getId()}</td>
+										<td>${e.getId()}</td>
+									</tr>
+								 --%>
+								
 							</tbody>
 						</table>
 					</div>
-					<div id="menu1" class="tab-pane fade" style="overflow:scroll">
+					<div id="menu1" class="tab-pane fade" style="overflow: scroll">
 						<h3>Past Appointments</h3>
 						<table class="table table-striped">
 							<thead>
@@ -162,8 +190,7 @@
 						</table>
 					</div>
 					<div id="menu2" class="tab-pane fade">
-						<u><h3>Make new Appointments</h3></u>
-						<br>
+						<u><h3>Make new Appointments</h3></u> <br>
 
 						<div class="form-group">
 							<label for="sel1">Select Department</label> <select
@@ -209,7 +236,11 @@
 		<script src="https://code.jquery.com/jquery-1.12.4.min.js"
 			integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
 			crossorigin="anonymous"></script>
-		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		<script>
+			window.jQuery
+					|| document
+							.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+		</script>
 		<script src="../../dist/js/bootstrap.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

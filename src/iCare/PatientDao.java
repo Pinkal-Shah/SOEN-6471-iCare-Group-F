@@ -100,7 +100,7 @@ public class PatientDao {
 	}
 
 	public static String getUname(String n, String p) {
-		String name="";
+		String name = "";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
@@ -110,17 +110,96 @@ public class PatientDao {
 			ps.setString(2, p);
 
 			ResultSet rs = ps.executeQuery();
-			if(rs.next()){  
+			if (rs.next()) {
 				name = rs.getString("name");
-            }  
-			
-			//status = rs.next();
+			}
+
+			// status = rs.next();
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
-		
+
 		return name;
 	}
+
+	/*
+	 * public static List<Emp> getAllEmployees(){ List<Emp> list=new
+	 * ArrayList<Emp>();
+	 * 
+	 * try{ Connection con=EmpDao.getConnection(); PreparedStatement
+	 * ps=con.prepareStatement("select * from user905");
+	 * 
+	 * ResultSet* rs=ps.executeQuery(); while(rs.next()){ Emp e=new Emp();
+	 * e.setId(rs.getInt(1)); e.setName(rs.getString(2));
+	 * e.setPassword(rs.getString(3)); e.setEmail(rs.getString(4));
+	 * e.setCountry(rs.getString(5)); list.add(e); } con.close(); }catch(Exception
+	 * e){e.printStackTrace();}
+	 * 
+	 * return list; }
+	 */
+
+	public static List<booking> getFutureBookingDetails() {
+		// TODO Auto-generated method stub
+		 List<booking> listofFutureBookings=new ArrayList<booking>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
+
+			PreparedStatement ps = con.prepareStatement("select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime >= NOW()");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				 	booking e=new booking();  
+	                e.setId( rs.getInt("bid"));   // Input Id
+	                e.setDateTime(rs.getDate("dtime").toString());  // Input the date
+	                e.setName(rs.getString("name"));  // Input the Name of Doc
+	                e.setDepartment(rs.getString("department"));    // Input the name of the Doctor
+	                listofFutureBookings.add(e);  
+				
+
+				//listofFutureBookings.add(e);
+			}
+			// status = rs.next();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return listofFutureBookings;
+
+		// return null;
+
+	}
+	
+	
+	public static List<booking> getPastBookingDetails() {
+		// TODO Auto-generated method stub
+		 List<booking> listofPastBookings=new ArrayList<booking>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
+
+			PreparedStatement ps = con.prepareStatement("select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime < NOW()");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				 	booking e=new booking();  
+	                e.setId( rs.getInt("bid"));   // Input Id
+	                e.setDateTime(rs.getDate("dtime").toString());  // Input the date
+	                e.setName(rs.getString("name"));  // Input the Name of Doc
+	                e.setDepartment(rs.getString("department"));    // Input the name of the Doctor
+	                listofPastBookings.add(e);  
+				
+
+			}
+			
+			con.close();
+		
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return listofPastBookings;
+
+		// return null;
+
+	}
+	
 }
