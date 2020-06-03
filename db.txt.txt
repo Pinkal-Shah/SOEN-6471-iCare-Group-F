@@ -35,6 +35,6 @@ CREATE TABLE administrators(
 	username varchar(20) NOT NULL,
     password varchar(20) NOT NULL,
     name varchar(20) NOT NULL,
-    Primary key (username)
+    PRIMARY KEY (username)
 )
 
