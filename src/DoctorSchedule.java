@@ -72,8 +72,6 @@ public class DoctorSchedule extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-	
-		
 		
 	}
 

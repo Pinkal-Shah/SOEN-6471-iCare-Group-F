@@ -10,5 +10,26 @@
 <h1>Reached in Schedule.JSP </h1>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%> 
+<%
+	ArrayList<String> arr = (ArrayList<String>) request.getAttribute("schedule");
+	String date[] = new String[arr.size()];
+	String time[] = new String[arr.size()];
+	String patient[] = new String[arr.size()];
+	for(int i=0;i<arr.size()-2;i++){
+		date[i] = arr.get(i);
+		time[i] = arr.get(i+1);
+		patient[i] = arr.get(i+2);
+	}
+	
+	for(int i=0;i<date.length;i++){%>
+%>>
+	<tr>
+		<td><%=date[i]%>></td>
+		<td><%=time[i]%>></td>
+		<td><%=patient[i]%>></td>
+	</tr>
+<%}%>
+
+	
 </body>
 </html>

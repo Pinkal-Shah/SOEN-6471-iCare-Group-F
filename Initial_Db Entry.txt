@@ -1,0 +1,2 @@
+INSERT into doctor_login (username, password,name,department) VALUES ('shivam@','123','shivam patel','physician');
+INSERT into booking (dtime,Pid,username) VALUES ('2020-06-02 11:30:00','1','shivam@');

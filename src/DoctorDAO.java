@@ -23,17 +23,11 @@ public class DoctorDAO {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		      
-		      // Setup the connection with the DB
 		      connect = DriverManager
 		          .getConnection("jdbc:mysql://" + host + "/doctor?"
 		              + "user=" + user + "&password=" + passwd );
-
-		      // Statements allow to issue SQL queries to the database
 		      statement = connect.createStatement();
 		      String sql = "SELECT * FROM doctor.doctor_login WHERE username = ? and password = ?";
-		      // Result set get the result of the SQL query
-//		      resultSet = statement
-//		    		.executeQuery();
 		      PreparedStatement statement = connect.prepareStatement(sql);
 		        statement.setString(1, username);
 		        statement.setString(2, password);
@@ -75,39 +69,50 @@ public class DoctorDAO {
 	    }
 	
 	public ArrayList<String> getSchedule(java.util.Date date,String username) {
+		
 		ArrayList<String> storedSchedule = new ArrayList();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		      
-		      // Setup the connection with the DB
 		      connect = DriverManager
 		          .getConnection("jdbc:mysql://" + host + "/doctor?"
 		              + "user=" + user + "&password=" + passwd );
 
-		      // Statements allow to issue SQL queries to the database
 		      statement = connect.createStatement();
 		      
 		      
 		      PreparedStatement statement1 =  connect.prepareStatement("SELECT dtime FROM doctor.booking");
 		      ResultSet dateconverted = statement1.executeQuery();
 		      java.sql.Date dd = null ;
+		      
 		      if(dateconverted.next()) {
 		    	dd = dateconverted.getDate("dtime");
 		    	  
 		      }
 		      
-		      System.out.println(dd);
+//		      System.out.println(dd);
+		      
 		      java.sql.Date sDate = new java.sql.Date(date.getTime());
-		      String sql = "SELECT doctor.patients.NAME FROM doctor.patients INNER JOIN doctor.booking ON doctor.patients.Pid = doctor.booking.Pid ";
+		      java.sql.Date sTime = null;
+		      if(dd == sDate) {
+		    	  sTime = new java.sql.Date(date.getTime());
+		      }
+		      
+		      String sql = "SELECT booking.dtime,doctor.patients.NAME FROM doctor.patients INNER JOIN doctor.booking ON doctor.patients.Pid = doctor.booking.Pid WHERE '"+dd+"' = '"+sDate+"'";
 		       
 		      PreparedStatement statement = connect.prepareStatement(sql);
 		      ResultSet result = statement.executeQuery();
 		     
+		      
 		      while(result.next()) {
-		    	 storedSchedule.add(result.getString("NAME"));
+		    	  String datetime[] = result.getString("dtime").split(" ");
+		    	  String patient = result.getString("NAME");
+		    	  storedSchedule.add(datetime[0]);
+		    	  storedSchedule.add(datetime[1]);
+		    	  storedSchedule.add(patient);
 		      }
 		        
-		    	
+		    
 		      
 		    } catch (Exception e) {
 		      e.printStackTrace();
@@ -117,6 +122,22 @@ public class DoctorDAO {
 		
 		return storedSchedule;
 
+		
+	}
+	
+	public Connection getConnection() {
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		      
+		      connect = DriverManager
+		          .getConnection("jdbc:mysql://" + host + "/doctor?"
+		              + "user=" + user + "&password=" + passwd );
+		}catch(Exception e) {
+			e.printStackTrace();
+		}		
+	
+		return connect;
 		
 	}
 
