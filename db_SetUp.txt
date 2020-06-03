@@ -1,0 +1,31 @@
+#First create a Mysql DB user with uname= root & password= admin
+
+CREATE DATABASE doctor;
+
+
+CREATE TABLE doctor_login(
+	username VARCHAR(20) NOT NULL,
+	password VARCHAR(45) NOT NULL,
+	name VARCHAR(20) NOT NULL,
+	department VARCHAR(45) NOT NULL,
+	PRIMARY KEY (username)
+);
+
+CREATE TABLE patients(
+   Pid int NOT NULL AUTO_INCREMENT,
+   NAME VARCHAR (20)     NOT NULL,
+   password VARCHAR(20)  NOT NULL,
+   email VARCHAR(50),
+   gender VARCHAR(50),
+   PRIMARY KEY (Pid)    
+);
+
+CREATE TABLE booking(
+bid int NOT NULL AUTO_INCREMENT,
+dtime datetime NOT NULL,
+PRIMARY KEY (bid),
+Pid integer,
+username varchar(20),
+FOREIGN KEY (Pid) REFERENCES patients(Pid),
+FOREIGN KEY (username) REFERENCES doctor_login(username)
+);

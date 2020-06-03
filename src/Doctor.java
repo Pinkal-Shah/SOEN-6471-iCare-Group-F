@@ -38,6 +38,7 @@ public class Doctor extends HttpServlet {
       String username = request.getParameter("username");
       String password = request.getParameter("password");
       
+      
       DoctorDAO doc = new DoctorDAO();
       if(doc.checkLogin(username, password)) {
     	  String destPage = "home.jsp";
