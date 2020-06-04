@@ -3,7 +3,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
+
 
 import java.sql.Connection;
 
@@ -14,7 +16,7 @@ import java.sql.Connection;
  *
  */
 
-public class UtilDB {
+public class PatientSchedule {
 
 	private Connection oConnection;
 	private Statement oStatement;
@@ -23,7 +25,7 @@ public class UtilDB {
 	/**
 	 * Method to create a new instance and connect to the MySQL server
 	 */
-	public UtilDB()
+	public PatientSchedule()
 	{
 		String sConnectionUrl = "jdbc:mysql://localhost:3306/iCare?autoReconnect=true&useSSL=false";
 		String sUser = "iCareRoot";
@@ -100,6 +102,25 @@ public class UtilDB {
 			return false;
 		}
 		return true;
+	}
+	
+	public ArrayList<String> GetDepartment()
+	{
+		ResultSet oResult;
+		ArrayList<String> oList = new ArrayList<String>();
+		try {
+			oResult = oStatement.executeQuery("SELECT * FROM doctor_login;");
+			while (oResult.next())
+			{
+				if (!oList.contains(oResult.getString("department")))
+					oList.add(oResult.getString("department"));
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+
+		return oList;
 	}
 	
 	/**

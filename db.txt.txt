@@ -42,6 +42,7 @@ CREATE TABLE booking(
 INSERT INTO doctor_login(name, username, password, department)
 VALUES	('Alice Doe', 'alice', 'psswd123', 'none'),
 		('Bob Doe', 'bob', 'psswd123', 'none'),
+		('Carl Johnson', 'cj', 'psswd123', 'Dept'),
 		('Dean Doe', 'dean', 'psswd123', 'none');
 
 INSERT INTO patients(NAME, password) VALUES ('John Smith', 'pass123');
