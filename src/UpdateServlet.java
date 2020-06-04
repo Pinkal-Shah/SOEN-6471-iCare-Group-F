@@ -1,28 +1,30 @@
 
-
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
- * Servlet implementation class DoctorSchedule
+ * Servlet implementation class UpdateServlet
  */
-@WebServlet("/DoctorSchedule")
-public class DoctorSchedule extends HttpServlet {
+@WebServlet("/UpdateServlet")
+public class UpdateServlet extends HttpServlet {
+	
+
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DoctorSchedule() {
+    public UpdateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -40,37 +42,18 @@ public class DoctorSchedule extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		doGet(request, response);
 		try {
-			processRequest(request,response);
-		} catch (ParseException e) {
+			processRequest(request, response);
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ParseException {
-		
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws SQLException {
 		DoctorDAO dao = new DoctorDAO();
-		
-		
-		java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("datetime")); 
-		String username = request.getParameter("username");
-		
-		ArrayList<String> storedSchedule = dao.getSchedule(date,username);
-		
-		for(int i=0;i<storedSchedule.size();i++) {
-			System.out.println(storedSchedule.get(i));
-		}
-		request.setAttribute("schedule", storedSchedule);
-		try {
-			request.getRequestDispatcher("schedule.jsp").forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		int bid = Integer.parseInt(request.getParameter("bid"));
+		dao.updateAppointment(bid);
 		
 	}
 

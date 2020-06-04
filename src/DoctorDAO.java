@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ public class DoctorDAO {
 		    	  sTime = new java.sql.Date(date.getTime());
 		      }
 		      
-		      String sql = "SELECT booking.dtime,doctor.patients.NAME FROM doctor.patients INNER JOIN doctor.booking ON doctor.patients.Pid = doctor.booking.Pid WHERE '"+dd+"' = '"+sDate+"'";
+		      String sql = "SELECT booking.bid,booking.dtime,doctor.patients.NAME FROM doctor.patients INNER JOIN doctor.booking ON doctor.patients.Pid = doctor.booking.Pid WHERE '"+dd+"' = '"+sDate+"'";
 		       
 		      PreparedStatement statement = connect.prepareStatement(sql);
 		      ResultSet result = statement.executeQuery();
@@ -110,6 +111,7 @@ public class DoctorDAO {
 		    	  storedSchedule.add(datetime[0]);
 		    	  storedSchedule.add(datetime[1]);
 		    	  storedSchedule.add(patient);
+		    	  storedSchedule.add(result.getString("bid"));
 		      }
 		        
 		    
@@ -125,6 +127,22 @@ public class DoctorDAO {
 		
 	}
 	
+	public void updateAppointment(int bid) throws SQLException {
+		
+		connect = getConnection();
+		statement = connect.createStatement();
+	      
+		String sql = "DELETE FROM doctor.booking WHERE bid = '"+bid+"'";
+	    PreparedStatement statement = connect.prepareStatement(sql);
+	       
+	 
+	    ResultSet result = statement.executeQuery();
+	    
+	    
+		
+		
+	}
+	
 	public Connection getConnection() {
 		
 		try {
@@ -133,15 +151,14 @@ public class DoctorDAO {
 		      connect = DriverManager
 		          .getConnection("jdbc:mysql://" + host + "/doctor?"
 		              + "user=" + user + "&password=" + passwd );
-		}catch(Exception e) {
-			e.printStackTrace();
-		}		
-	
+		}catch (Exception e) {
+		      e.printStackTrace();
+		} finally {
+		      close();
+		    }
+		
 		return connect;
 		
 	}
-
-	
-	
 
 }
