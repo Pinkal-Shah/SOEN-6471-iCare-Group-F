@@ -16,7 +16,7 @@ import java.sql.Connection;
  *
  */
 
-public class PatientSchedule {
+public class PatientScheduleDao {
 
 	private Connection oConnection;
 	private Statement oStatement;
@@ -25,7 +25,7 @@ public class PatientSchedule {
 	/**
 	 * Method to create a new instance and connect to the MySQL server
 	 */
-	public PatientSchedule()
+	public PatientScheduleDao()
 	{
 		String sConnectionUrl = "jdbc:mysql://localhost:3306/iCare?autoReconnect=true&useSSL=false";
 		String sUser = "iCareRoot";
@@ -66,10 +66,11 @@ public class PatientSchedule {
 	 * @param sPid - the patient's id
 	 * @param sUserName - the doctor's username 
 	 * @param sDate - the date requested
-	 * @return if the booking was inserted successfully or not (if the doctor is already busy in this time slot)
+	 * @return if the booking can be inserted or not
 	 */
-	public boolean InsertBooking(String sPid, String sUserName, String sDate)
+	public boolean ValidateBooking(String sPid, String sUserName, String sDate)
 	{
+		System.out.println("Seeking validation...");
 		ResultSet oRequest = null;
 		try {
 			oRequest = oStatement.executeQuery("SELECT * FROM booking WHERE username='" + sUserName + "';");
@@ -78,7 +79,6 @@ public class PatientSchedule {
 		}
 		if (oRequest != null)
 		{
-			System.out.println("Found matching!");
 			try {
 				while (oRequest.next())
 				{
@@ -88,22 +88,45 @@ public class PatientSchedule {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
-		String sQuerry = "INSERT INTO booking (dtime, pid, username) VALUES(?, ?, ?)";
-		try {
-			PreparedStatement oPreparedStatement = oConnection.prepareStatement(sQuerry);
-			oPreparedStatement.setString(1, sDate);
-			oPreparedStatement.setString(2, sPid);
-			oPreparedStatement.setString(3, sUserName);
-			oPreparedStatement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+		System.out.println("Its valid yeh");
 		return true;
 	}
 	
+	/**
+	 * Method to book an appointment
+	 * @param sPid - the patient's id
+	 * @param sUserName - the doctor's username 
+	 * @param sDate - the date requested
+	 * @return If the appointment was successfully scheduled or not
+	 */
+	public boolean BookAppointment(String sPid, String sUserName, String sDate)
+	{
+		if (ValidateBooking(sPid, sUserName, sDate))
+		{
+			String sQuerry = "INSERT INTO booking (dtime, pid, username) VALUES(?, ?, ?)";
+			try {
+				PreparedStatement oPreparedStatement = oConnection.prepareStatement(sQuerry);
+				oPreparedStatement.setString(1, sDate);
+				oPreparedStatement.setString(2, sPid);
+				oPreparedStatement.setString(3, sUserName);
+				oPreparedStatement.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+			System.out.println("Appointment booked");
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Method to list all the departments
+	 * @return the name of all departments
+	 */
 	public ArrayList<String> GetDepartment()
 	{
 		ResultSet oResult;
