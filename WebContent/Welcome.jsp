@@ -1,14 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
-<%@page import="java.sql.ResultSet" %>
-<%@page import="iCare.PatientSchedule"%>
-<%@page import="java.util.ArrayList" %>
-
-<%
-	PatientSchedule oDatabase = new PatientSchedule();
-%>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -176,24 +168,13 @@
 						   <div class="form-group">
 							<label for="department">Select Department</label> <select
 								class="form-control" id="department">
-								<%
-								ArrayList<String> oDepts = oDatabase.GetDepartment();
-								for (int i = 0; i < oDepts.size(); i++)
-								{
-								%>
-								<option><%=oDepts.get(i) %></option>
-								<%} %>
+								<option>New dept</option>
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="doctor">Select Doctor</label> <select
 								class="form-control" id="doctor">
-						<%
-						ResultSet oResultSet = oDatabase.GetQuerry("SELECT * from doctor_login WHERE department='none'");
-						while(oResultSet.next()){
-						%>
-						<option> <%=oResultSet.getString("name") %></option>
-						<%} %>
+							<option>Doctor Anne</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -213,11 +194,7 @@
 			</div>
 
 		</div>
-		<%
-			// Use the following line to schedule, it returns false if it cannot schedule
-			//oDatabase.InsertBooking("1", "dean", "2020-08-02 11:30:00")
-			oDatabase.CloseConnection();
-		%>
+
 		<!-- /container -->
 
 
