@@ -74,7 +74,6 @@ public class PatientScheduleServlet extends HttpServlet{
 			PatientScheduleDao oDao = new PatientScheduleDao();
 			ArrayList<String> oDepts = oDao.GetDepartment();
 			request.setAttribute("departments", oDepts);
-			System.out.println("Chamando essa porra da desgraça");
 			request.getRequestDispatcher("Welcome.jsp").forward(request, response);
 			oDao.CloseConnection();
 		}  
