@@ -1,6 +1,7 @@
 package iCare;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdministratorDao {
@@ -37,8 +38,8 @@ public class AdministratorDao {
 		return status;
 	}
 	
-	public static List<doctor> getAllDoctors() {
-		List<doctor> allDoctorsList = null;
+	public ArrayList<String> getDoctors() {
+		ArrayList<String> allDoctorsList = new ArrayList<String>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
@@ -50,19 +51,15 @@ public class AdministratorDao {
 				String username = rs.getString("username");
 				String name = rs.getString("name");
 				String department = rs.getString("department");
-				String password = "";
-				
-				doctor d = new doctor();
-				d.setName(name);
-				d.setUsername(username);
-				d.setPassword(password);
-				d.setDepartment(department);
-				
-				allDoctorsList.add(d);
-            }  
+
+				allDoctorsList.add(name);
+				allDoctorsList.add(username);
+				allDoctorsList.add(department);				
+            }
+			con.close();
 		} catch (Exception e) {
-			System.out.println(e);
-		}		
+			e.printStackTrace();
+		} 
 		
 		return allDoctorsList;
 	}

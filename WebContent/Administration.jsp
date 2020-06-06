@@ -13,7 +13,7 @@
 <link rel="canonical"
 	href="https://getbootstrap.com/docs/3.4/examples/navbar/">
 
-<title>iCare- Welcome</title>
+<title>Administration</title>
 
 <!-- Bootstrap core CSS -->
 <link
@@ -33,8 +33,7 @@
 <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -92,33 +91,30 @@
 			<div class="jumbotron" style="box-shadow: 5px 10px 18px #888888; background-color: white">
 			
 				<div id="doctorlist" style="overflow:scroll">
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Iterator"%> 					
 					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>Email</th>
+								<th>Username</th>
 								<th>Department</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>John</td>
-								<td>Smith</td>
-								<td>jsmith@clinic.com</td>
-								<td>Oncology</td>
-							</tr>
-							<tr>
-								<td>Mary</td>
-								<td>Moe</td>
-								<td>mary@clinic.com</td>
-								<td>Nephrology</td>
-							</tr>
-							<tr>
-								<td>July</td>
-								<td>Dooley</td>
-								<td>july@clinic.com</td>
-								<td>Radiology</td>
-							</tr>
+				<%
+				ArrayList<String> arr = (ArrayList<String>) request.getAttribute("doctors");
+				String name[] = new String[arr.size()];
+				String username[] = new String[arr.size()];
+				String department[] = new String[arr.size()];
+				
+				for(int i = 0; i < arr.size() - 2; i+=3){%>
+					<tr>
+					    <td><%=arr.get(i)%></td>
+						<td><%=arr.get(i+1)%></td>
+						<td><%=arr.get(i+2)%></td>
+					</tr>
+				<%}%>		
 						</tbody>
 					</table>
 				</div>
@@ -141,7 +137,7 @@
 						</button>
 					  </div>
 					  <div class="modal-body">
-						<form>
+						<form action="AddDoctorServlet" method="POST">
 						  <div class="form-group">
 							<label for="labelInputFirstName">First name</label>
 							<input type="text" class="form-control" id="inputFirstName" placeholder="Enter first name">
@@ -160,7 +156,7 @@
 						  </div>
 						  <div class="form-group">
 						<div class="dropdown">
-						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select the department<span class="caret"></span></button>
+						  <button class="btn btn-primary dropdown-toggle" id="department" type="button" data-toggle="dropdown">Select the department<span class="caret"></span></button>
 						  <ul class="dropdown-menu">
 							<li><a href="#">Cardiology</a></li>
 							<li><a href="#">Nephrology</a></li>
@@ -174,7 +170,7 @@
 					  </div>
 					  <div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save changes</button>
+						<button type="button" class="btn btn-primary" value="saveBtn">Save changes</button>
 					  </div>
 					</div>
 				  </div>
