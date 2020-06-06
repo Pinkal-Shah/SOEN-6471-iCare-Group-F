@@ -1,13 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
-<%@page import="java.sql.ResultSet" %>
-<%@page import="iCare.PatientSchedule"%>
-<%@page import="java.util.ArrayList" %>
-
-<%
-	PatientSchedule oDatabase = new PatientSchedule();
-%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="iCare.PatientScheduleDao"%> 
 
 <!doctype html>
 <html lang="en">
@@ -172,28 +168,39 @@
 					<div id="menu2" class="tab-pane fade">
 						<u><h3>Make new Appointments</h3></u>
 						<br>
-
+						<form action="PatientScheduleServlet" method="post">
 						   <div class="form-group">
 							<label for="department">Select Department</label> <select
 								class="form-control" id="department">
 								<%
-								ArrayList<String> oDepts = oDatabase.GetDepartment();
-								for (int i = 0; i < oDepts.size(); i++)
-								{
-								%>
-								<option><%=oDepts.get(i) %></option>
-								<%} %>
+								PatientScheduleDao pdao = new PatientScheduleDao();
+									ArrayList<String> depts = pdao.GetDepartment();
+								// TODO: This always returns null, it is not linking with the PatientScheduleServlet,
+								// and I have no idea why
+								//ArrayList<String> deptos = (ArrayList<String>) request.getAttribute("depts");
+									for (int i = 0; i < depts.size(); i++){%>
+									<option value="<%=depts.get(i)%>"><%=depts.get(i)%></option>
+
+								<%}%>
+								
+								<input type="submit" value="Select Department">
+								</form>
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="doctor">Select Doctor</label> <select
 								class="form-control" id="doctor">
-						<%
-						ResultSet oResultSet = oDatabase.GetQuerry("SELECT * from doctor_login WHERE department='none'");
-						while(oResultSet.next()){
-						%>
-						<option> <%=oResultSet.getString("name") %></option>
-						<%} %>
+							<option>Doctor Anne</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="date">Select Day</label> <select
+								class="form-control" id="doctor">
+							<option value="2020-06-11">06/11</option>
+							<option value="2020-06-12">06/12</option>
+							<option value="2020-06-13">06/13</option>
+							<option value="2020-06-14">06/14</option>
+							<option value="2020-06-15">06/15</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -202,22 +209,19 @@
 								min="09:00" max="18:00" required>
 						</div>
 
+						<form action="ValidateServlet" method="post">
 						<div class="form-group">
 							<button class="btn btn-danger">Validate</button>
 							<button class="btn btn-success">Confirm Appointment</button>
 
 						</div>
-
+					</form>
 					</div>
 				</div>
 			</div>
 
 		</div>
-		<%
-			// Use the following line to schedule, it returns false if it cannot schedule
-			//oDatabase.InsertBooking("1", "dean", "2020-08-02 11:30:00")
-			oDatabase.CloseConnection();
-		%>
+
 		<!-- /container -->
 
 

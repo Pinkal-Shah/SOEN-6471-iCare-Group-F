@@ -141,8 +141,6 @@ public class PatientScheduleDao {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-
-
 		return oList;
 	}
 	
