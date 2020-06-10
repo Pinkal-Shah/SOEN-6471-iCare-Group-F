@@ -70,7 +70,7 @@ public class AdministratorDao {
 			Connection con = AdministratorDao.getConnection();
 			PreparedStatement ps = con
 					.prepareStatement("delete from icare.doctor_login where id= ?;");
-			ps.setString(1, id);
+			ps.setInt(1, id);
 			status = ps.executeUpdate();
 
 			con.close();
