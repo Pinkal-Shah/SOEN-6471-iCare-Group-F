@@ -1,4 +1,4 @@
-package iCare;
+package iCarePatients;
 
 import java.util.*;
 import java.sql.*;
@@ -36,55 +36,36 @@ public class PatientDao {
 
 		return status;
 	}
-	/*
-	 * public static int update(patient e){ int status=0; try{ Connection
-	 * con=EmpDao.getConnection(); PreparedStatement ps=con.prepareStatement(
-	 * "update emp set name=?,password=?,email=?,country=? where id=?");
-	 * ps.setString(1,e.getName()); ps.setString(2,e.getPassword());
-	 * ps.setString(3,e.getEmail()); ps.setString(4,e.getGender());
-	 * 
-	 * ps.setInt(5,e.getId());
-	 * 
-	 * status=ps.executeUpdate();
-	 * 
-	 * con.close(); }catch(Exception ex){ex.printStackTrace();}
-	 * 
-	 * return status; } public static int delete(int id){ int status=0; try{
-	 * Connection con=EmpDao.getConnection(); PreparedStatement
-	 * ps=con.prepareStatement("delete from emp where id=?"); ps.setInt(1,id);
-	 * status=ps.executeUpdate();
-	 * 
-	 * con.close(); }catch(Exception e){e.printStackTrace();}
-	 * 
-	 * return status; } public static patien getEmployeeById(int id){ patient e=new
-	 * patient();
-	 * 
-	 * try{ Connection con=EmpDao.getConnection(); PreparedStatement
-	 * ps=con.prepareStatement("select * from user905 where id=?"); ps.setInt(1,id);
-	 * ResultSet rs=ps.executeQuery(); if(rs.next()){ e.setId(rs.getInt(1));
-	 * e.setName(rs.getString(2)); e.setPassword(rs.getString(3));
-	 * e.setEmail(rs.getString(4)); e.setGender(rs.getString(5)); } con.close();
-	 * }catch(Exception ex){ex.printStackTrace();}
-	 * 
-	 * return e; } public static List<patient> getAllEmployees(){ List<patient>
-	 * list=new ArrayList<patient>();
-	 * 
-	 * try{ Connection con=EmpDao.getConnection(); PreparedStatement
-	 * ps=con.prepareStatement("select * from user905"); ResultSet
-	 * rs=ps.executeQuery(); while(rs.next()){ patient e=new patient();
-	 * e.setId(rs.getInt(1)); e.setName(rs.getString(2));
-	 * e.setPassword(rs.getString(3)); e.setEmail(rs.getString(4));
-	 * e.setGender(rs.getString(5)); list.add(e); } con.close(); }catch(Exception
-	 * e){e.printStackTrace();}
-	 * 
-	 * return list; }
-	 */
+	
+	
+	
+	public static int Appoint(String pid, String dtime, String username) {
+		int status = 0;
+		try {
+			System.out.println("pid:"+pid);
+			Connection con = PatientDao.getConnection();
+			PreparedStatement ps = con
+					.prepareStatement(" insert into booking (dtime, Pid,username) values (?,?,?);");
+			ps.setString(1, dtime);
+			ps.setString(2, pid);
+			ps.setString(3, username);
+
+			status = ps.executeUpdate();
+
+			con.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return status;
+	}
+	
 
 	public static boolean validate(String name, String pass) {
 		boolean status = false;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
 
 			PreparedStatement ps = con.prepareStatement("select * from patients where email=? and password=?");
 			ps.setString(1, name);
@@ -102,9 +83,8 @@ public class PatientDao {
 	public static String getUname(String n, String p) {
 		String name = "";
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
-
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
 			PreparedStatement ps = con.prepareStatement("select name from patients where email=? and password=?");
 			ps.setString(1, n);
 			ps.setString(2, p);
@@ -122,29 +102,38 @@ public class PatientDao {
 
 		return name;
 	}
+	
+	public static String getId(String n, String p) {
+		String pid = "";
+		try {
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
 
-	/*
-	 * public static List<Emp> getAllEmployees(){ List<Emp> list=new
-	 * ArrayList<Emp>();
-	 * 
-	 * try{ Connection con=EmpDao.getConnection(); PreparedStatement
-	 * ps=con.prepareStatement("select * from user905");
-	 * 
-	 * ResultSet* rs=ps.executeQuery(); while(rs.next()){ Emp e=new Emp();
-	 * e.setId(rs.getInt(1)); e.setName(rs.getString(2));
-	 * e.setPassword(rs.getString(3)); e.setEmail(rs.getString(4));
-	 * e.setCountry(rs.getString(5)); list.add(e); } con.close(); }catch(Exception
-	 * e){e.printStackTrace();}
-	 * 
-	 * return list; }
-	 */
+			PreparedStatement ps = con.prepareStatement("select Pid from patients where email=? and password=?");
+			ps.setString(1, n);
+			ps.setString(2, p);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				pid = rs.getString("Pid");
+			}
+
+			// status = rs.next();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return pid;
+	}
+
 
 	public static List<booking> getFutureBookingDetails() {
 		// TODO Auto-generated method stub
 		 List<booking> listofFutureBookings=new ArrayList<booking>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
 
 			PreparedStatement ps = con.prepareStatement("select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime >= NOW()");
 			ResultSet rs = ps.executeQuery();
@@ -175,8 +164,8 @@ public class PatientDao {
 		// TODO Auto-generated method stub
 		 List<booking> listofPastBookings=new ArrayList<booking>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/iCare", "root", "root");
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
 
 			PreparedStatement ps = con.prepareStatement("select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime < NOW()");
 			ResultSet rs = ps.executeQuery();
@@ -201,5 +190,74 @@ public class PatientDao {
 		// return null;
 
 	}
+	
+	
+	
+	//Author : Leticia
+	public static ArrayList<String> GetAllDepartments() {
+		// TODO Auto-generated method stub
+		ArrayList<String> listofDepartments=new ArrayList<String>();
+		try {
+			//Class.forName("com.mysql.jdbc.Driver");
+			Connection con = PatientDao.getConnection();
+			PreparedStatement ps = con.prepareStatement("select DISTINCT department from doctor_login");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				 	//doctorDetails e=new doctorDetails();  
+	                String e= ( rs.getString("department"));	                
+	                listofDepartments.add(e);  	
+			}
+			
+			con.close();		
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return listofDepartments;
+	}
+	
+	
+	
+	//Author : Leticia
+		public static ArrayList<String> GetDoctors(String department) {
+			// TODO Auto-generated method stub
+			ArrayList<String> listofDoctors=new ArrayList<String>();
+			try {
+				//Class.forName("com.mysql.jdbc.Driver");
+				Connection con = PatientDao.getConnection();
+				PreparedStatement ps = con.prepareStatement(" select * from doctor_login where department =?");
+				ps.setString(1, department);
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {  
+		                String e= ( rs.getString("name"));	                
+		                listofDoctors.add(e);  	
+				}
+				
+				con.close();		
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			return listofDoctors;
+		}
+
+		public static boolean validateAppointment(String name, String dept, String time) {
+			boolean status = false;
+			try {
+				//Class.forName("com.mysql.jdbc.Driver");
+				Connection con = PatientDao.getConnection();
+
+				PreparedStatement ps = con.prepareStatement("select dtime,name,department  from booking INNER JOIN doctor_login WHERE doctor_login.name=? AND booking.dtime=? AND department=?");
+				ps.setString(1, name);
+				ps.setString(2, time);
+				ps.setString(2, dept);
+				
+				ResultSet rs = ps.executeQuery();
+				status = rs.next();
+
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			return false;
+		}
+
 	
 }

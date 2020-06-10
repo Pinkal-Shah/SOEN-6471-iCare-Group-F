@@ -1,4 +1,4 @@
-package iCare;
+package iCarePatients;
 import java.io.IOException;  
 import java.io.PrintWriter;  
   

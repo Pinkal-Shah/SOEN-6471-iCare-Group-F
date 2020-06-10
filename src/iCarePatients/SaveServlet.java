@@ -1,4 +1,4 @@
-package iCare;
+package iCarePatients;
 
 import java.io.IOException;  
 import java.io.PrintWriter;  
@@ -38,7 +38,7 @@ public class SaveServlet extends HttpServlet {
         	out.println("</script>"); 
             request.getRequestDispatcher("login.jsp").include(request, response);  
         }else{  
-        	out.print("<script><alert>Unsuccessfull attempt, Please contact iCare Center.</alert></script>");   
+        	out.print("<script><alert>Unsuccessfull attempt, Please contact iCarePatients Center.</alert></script>");   
         }  
           
         out.close();  

@@ -1,8 +1,8 @@
-package iCare;
+package iCarePatients;
 
-public class booking {
+public class doctorDetails {
 	private int id;
-	private String name, dateTime, department;
+	private String name, department;
 
 
  public int getId(){
@@ -11,10 +11,6 @@ public class booking {
  
 	public String getName() {
 		return name;
-	}
-
-	public String getDateTime() {
-		return dateTime;
 	}
 	
 	public String getDepartment() {
@@ -28,10 +24,6 @@ public class booking {
 	
 	public void setId(int id) {
 		this.id= id;
-	}
-	
-	public void setDateTime(String dateTime) {
-		this.dateTime = dateTime;
 	}
 	
 	public void setDepartment(String department) {

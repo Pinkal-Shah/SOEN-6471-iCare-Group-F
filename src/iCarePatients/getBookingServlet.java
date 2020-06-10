@@ -1,4 +1,4 @@
-package iCare;
+package iCarePatients;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,9 +61,18 @@ public class getBookingServlet extends HttpServlet {
 		}
 		
 		
-		//request.setAttribute("listOfPastBookings", listOfPastBookings);
-		//RequestDispatcher rd=request.getRequestDispatcher("Welcome.jsp");  
-        //rd.forward(request,response);  
+		ArrayList myList = new ArrayList(listOfPastBookings);
+		for(int i=0; i< myList.size();i++)
+		{
+			System.out.println(myList.get(i));
+		}
+		
+		
+	
+		request.setAttribute("listOfPastBooking", listOfPastBooking); 
+		RequestDispatcher rd= request.getRequestDispatcher("/WebContent/Welcome.jsp");
+		rd.forward(request, response);
+
 			
 		}
 	}

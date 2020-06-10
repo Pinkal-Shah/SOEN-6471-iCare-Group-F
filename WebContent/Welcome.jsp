@@ -1,6 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page language="java" import="java.util.*"%>
+
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%
+	String id = request.getParameter("userid");
+String driver = "com.mysql.jdbc.Driver";
+String connectionUrl = "jdbc:mysql://localhost:3306/";
+String database = "iCare";
+String userid = "root";
+String password = "root";
+try {
+	Class.forName(driver);
+} catch (ClassNotFoundException e) {
+	e.printStackTrace();
+}
+Connection connection = null;
+Statement statement = null;
+ResultSet resultSet = null;
+%>
 
 <!doctype html>
 <html lang="en">
@@ -31,20 +53,49 @@
 <link href="navbar.css" rel="stylesheet">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- <script type="text/javascript">
-$(document).on("click", "#somebutton", function() { 
-                $.get("someservlet", function(responseText) {   
-                    $("#somediv").text(responseText);    
-                });
-            });
-</script> -->
+<style>
+.my-custom-scrollbar {
+position: relative;
+height: 200px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+</style>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		//alert({listOfPastBooking});
 		$.post("getBookingServlet", function(responseText) {
 			$("#somediv").text(responseText);
 		});
+
+		$.post("getDepartmentDetailsServlet", function(responseText) {
+			$("#somediv").text(responseText);
+		});
+
 	});
+
+	function deptSelChange() {
+		// alert("Hello");
+		console.log("doctor sent")
+		var value = document.getElementById('selDepartment').value;
+		console.log(value);
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4) {
+				var data = xhr.responseText;
+				//alert(data);
+			}
+		}
+		xhr.open('POST',
+				'${pageContext.request.contextPath}/getDoctors?department='
+						+ value, true);
+		xhr.send(value);
+
+		// self.location.reload(true);///
+	}
 </script>
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -121,106 +172,240 @@ $(document).on("click", "#somebutton", function() {
 
 				<div class="tab-content">
 					<div id="home" class="tab-pane fade in active"
-						style="overflow: scroll">
+						>
 						<h3>Future Appointments</h3>
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Date Time Details</th>
-									<th>Name of the Doctor</th>
-									<th>Department</th>
 
-								</tr>
-							</thead>
-							<tbody>
+						<!-- <iframe src="SeeFutureBookings.jsp" title="Future Bookings"
+							style="position: relative; height: 100%; width: 100%;"
+							frameBorder="0"></iframe> -->
+
+						<%-- <table class="table">
 							<tr>
-										<td>aa</td>
-										<td>b</td>
-										<td>c</td>
-										<td>d</td>
-									</tr>
-								<c:forEach items="${sessionScope.listOfPastBookings}" var="e">
+								<td>Id</td>
+								<td>Department</td>
+								<td>Name</td>
+								<td>Date/Time</td>
+
+							</tr>
+							<%
+								try {
+
+								//ServletContext application1 = getServletConfig().getServletContext(); 
+								String pid = (String) session.getAttribute("pid");
+
+								//String pid="1";	
+								connection = DriverManager.getConnection(connectionUrl + database, userid, password);
+								statement = connection.createStatement();
+
+								String sql = "select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime >= NOW() AND PID = '"
+								+ pid + "'";
+								resultSet = statement.executeQuery(sql);
+								while (resultSet.next()) {
+							%>
+							<tr>
+								<td><%=resultSet.getString("bid")%></td>
+								<td><%=resultSet.getString("department")%></td>
+								<td><%=resultSet.getString("name")%></td>
+								<td><%=resultSet.getString("dtime")%></td>
+							</tr>
+							<%
+								}
+							connection.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							%>
+						</table> --%>
+						
+						
+						
+						
+						
+						<div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+							<table class="table table-bordered table-striped mb-0">
+								<thead>
 									<tr>
-										<td>aa</td>
-										<td>b</td>
-										<td>c</td>
-										<td>d</td>
+										<th scope="col">ID</th>
+										<th scope="col">Department</th>
+										<th scope="col">Name</th>
+										<th scope="col">Date- Time</th>
 									</tr>
-								</c:forEach>
-								
-								<%-- <tr>
-										<td>${e.getId()}</td>
-										<td>${e.getId()}</td>
-										<td>${e.getId()}</td>
-										<td>${e.getId()}</td>
-									</tr>
-								 --%>
-								
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<%
+								try {
+								String pid = (String) session.getAttribute("pid");
+								connection = DriverManager.getConnection(connectionUrl + database, userid, password);
+								statement = connection.createStatement();
+								String sql = "select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime >= NOW() AND PID = '"
+										+ pid + "'";
+								resultSet = statement.executeQuery(sql);
+								while (resultSet.next()) {
+							%>
+							<tr>
+								<td><%=resultSet.getString("bid")%></td>
+								<td><%=resultSet.getString("department")%></td>
+								<td><%=resultSet.getString("name")%></td>
+								<td><%=resultSet.getString("dtime")%></td>
+							</tr>
+							<%
+								}
+							connection.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							%>
+									
+								</tbody>
+							</table>
+
+						</div>
+						
+						
+						
+						
+						
+						
+
 					</div>
+
+
 					<div id="menu1" class="tab-pane fade" style="overflow: scroll">
 						<h3>Past Appointments</h3>
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>Firstname</th>
-									<th>Lastname</th>
-									<th>Email</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>John</td>
-									<td>Doe</td>
-									<td>john@example.com</td>
-								</tr>
-								<tr>
-									<td>Mary</td>
-									<td>Moe</td>
-									<td>mary@example.com</td>
-								</tr>
-								<tr>
-									<td>July</td>
-									<td>Dooley</td>
-									<td>july@example.com</td>
-								</tr>
-							</tbody>
-						</table>
+						<!-- <iframe src="SeePastBookings.jsp" title="Past Bookings"
+							style="position: relative; height: 100%; width: 100%;"
+							frameBorder="0"></iframe> -->
+
+
+
+						<div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+							<table class="table table-bordered table-striped mb-0">
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Department</th>
+										<th scope="col">Name</th>
+										<th scope="col">Date- Time</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+								try {
+								String pid = (String) session.getAttribute("pid");
+								connection = DriverManager.getConnection(connectionUrl + database, userid, password);
+								statement = connection.createStatement();
+								String sql = "select bid,dtime,name,department  from booking INNER JOIN doctor_login ON booking.username= doctor_login.username WHERE dtime < NOW() AND PID = '"
+								+ pid + "'";
+								resultSet = statement.executeQuery(sql);
+								while (resultSet.next()) {
+							%>
+							<tr>
+								<td><%=resultSet.getString("bid")%></td>
+								<td><%=resultSet.getString("department")%></td>
+								<td><%=resultSet.getString("name")%></td>
+								<td><%=resultSet.getString("dtime")%></td>
+							</tr>
+							<%
+								}
+							connection.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							%>
+									
+								</tbody>
+							</table>
+
+						</div>
+
 					</div>
+
+
 					<div id="menu2" class="tab-pane fade">
 						<u><h3>Make new Appointments</h3></u> <br>
 
-						<div class="form-group">
-							<label for="sel1">Select Department</label> <select
-								class="form-control" id="sel1">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="sel1">Select Doctor</label> <select
-								class="form-control" id="sel1">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="sel1">Select Time Slot</label> <input
-								class="form-control" type="time" id="appt" name="appt"
-								min="09:00" max="18:00" required>
-						</div>
+						<form action="makeAppointment" method="POST" id="appointment">
 
-						<div class="form-group">
-							<button class="btn btn-danger">Validate</button>
-							<button class="btn btn-success">Confirm Appointment</button>
+							<div class="container">
+								<div class="row">
+									<div class='col-sm-6'>
+										<div class="form-group">
 
-						</div>
+											<select id="choose" name="choose" class="form-control"
+												form="appointment">
+
+
+
+												<%
+													try {
+													connection = DriverManager.getConnection(connectionUrl + database, userid, password);
+													statement = connection.createStatement();
+													String sql = "select department,name,username from doctor_login";
+													resultSet = statement.executeQuery(sql);
+													while (resultSet.next()) {
+												%>
+
+												<option
+													value="<%=resultSet.getString("department")%>+<%=resultSet.getString("name")%>+<%=resultSet.getString("username")%>">Department:<%=resultSet.getString("department")%>
+													|| Name: Dr.<%=resultSet.getString("name")%>
+												</option>
+
+												<%
+													}
+												connection.close();
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+												%>
+											</select>
+										</div>
+									</div>
+									<script type="text/javascript">
+										$(function() {
+											$('#datetimepicker1')
+													.datetimepicker();
+										});
+									</script>
+								</div>
+							</div>
+
+							<div class="container">
+								<div class="row">
+									<div class='col-sm-6'>
+										<div class="form-group">
+											<input type="datetime-local" id="meeting-time"
+												class="form-control" name="meeting-time" value=" new Date()"
+												min="2018-06-07T00:00" max="2099-06-14T00:00"
+												required="required">
+
+										</div>
+									</div>
+									<script type="text/javascript">
+										$(function() {
+											$('#datetimepicker1')
+													.datetimepicker();
+										});
+									</script>
+								</div>
+							</div>
+
+							<div class="container">
+								<div class="row">
+									<div class='col-sm-6'>
+										<div class="form-group">
+											<input type="submit" class="btn btn-danger"
+												value="Validate & Confirm" />
+
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</form>
+
 
 					</div>
 				</div>

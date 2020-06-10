@@ -1,4 +1,4 @@
-package iCare;
+package iCarePatients;
 
 public class patient {
 	private int id;
