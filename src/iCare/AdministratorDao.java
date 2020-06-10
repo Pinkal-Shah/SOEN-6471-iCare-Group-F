@@ -63,4 +63,22 @@ public class AdministratorDao {
 		
 		return allDoctorsList;
 	}
+	
+	public static int deleteDoctor(int id) {
+		int status = 0;
+		try {
+			Connection con = AdministratorDao.getConnection();
+			PreparedStatement ps = con
+					.prepareStatement("delete from icare.doctor_login where id= ?;");
+			ps.setString(1, id);
+			status = ps.executeUpdate();
+
+			con.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return status;
+	}
+
 }
