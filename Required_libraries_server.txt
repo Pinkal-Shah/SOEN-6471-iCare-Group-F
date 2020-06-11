@@ -1,0 +1,5 @@
+server :  Tomcat v8.5
+
+external jar : my-sql connectot-java-5.1.49.jar
+	       servlet-api.jar	
+               
