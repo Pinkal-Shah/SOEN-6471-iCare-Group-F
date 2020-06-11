@@ -12,9 +12,9 @@ public class DeleteServlet extends HttpServlet {
              throws ServletException, IOException {  
     	 response.setContentType("text/html");  
          PrintWriter out=response.getWriter();  
-		 String sid=request.getParameter("id"); 
+		 String name=request.getParameter("Name"); 
 		 int id=Integer.parseInt(sid);
-		 int status = AdministratorDao.deleteDoctor(id); 
+		 int status = AdministratorDao.deleteDoctor(name); 
 		 if(status>0) {
 	        	out.println("<script type=\"text/javascript\">");
 	        	out.println("alert('Doctor was deleted successfully');");

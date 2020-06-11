@@ -64,13 +64,13 @@ public class AdministratorDao {
 		return allDoctorsList;
 	}
 	
-	public static int deleteDoctor(int id) {
+	public static int deleteDoctor(String id) {
 		int status = 0;
 		try {
 			Connection con = AdministratorDao.getConnection();
 			PreparedStatement ps = con
 					.prepareStatement("delete from icare.doctor_login where id= ?;");
-			ps.setInt(1, id);
+			ps.setString(1, id);
 			status = ps.executeUpdate();
 
 			con.close();
