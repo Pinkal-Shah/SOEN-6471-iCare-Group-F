@@ -18,6 +18,7 @@ AdminDAO.java
 DoctorDAO.java
 WelcomeAdmin.jsp
 Welcome.jsp
+PatientDao.jsp
 ---------------------------------------------------
 
 
